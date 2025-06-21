@@ -3,11 +3,9 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView }
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import menu from '../data/menu';
-// PASSO 2.1: Importar o pacote de ícones
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
 
 export default function MenuScreen({ navigation }) {
-  // ... (toda a sua lógica de state e functions continua a mesma)
   const [cart, setCart] = useState([]);
   const [selectedFlavors, setSelectedFlavors] = useState([]);
 
@@ -79,14 +77,11 @@ export default function MenuScreen({ navigation }) {
     });
   };
 
-  // Calcula a quantidade total de itens no carrinho
   const totalItemsInCart = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    // PASSO 2.2: Usar um View como container principal para posicionar o botão flutuante
     <View style={styles.container}>
-      <ScrollView> 
-        {/* ... (Todo o seu conteúdo de categorias e FlatLists continua aqui dentro do ScrollView) ... */}
+      <ScrollView>
         {Object.keys(menu).map((category) => (
           <View key={category}>
             <Text style={styles.categoryTitle}>{category}</Text>
@@ -94,6 +89,8 @@ export default function MenuScreen({ navigation }) {
               data={Array.isArray(menu[category]) ? menu[category] : []}
               keyExtractor={(item) => String(item.id)}
               horizontal
+              showsHorizontalScrollIndicator={true}
+              contentContainerStyle={{ paddingHorizontal: 10 }}
               renderItem={({ item }) => {
                 const isHalfSelected = selectedFlavors.includes(item);
                 const cartItem = cart.find((cartItem) => cartItem.id === item.id);
@@ -135,12 +132,11 @@ export default function MenuScreen({ navigation }) {
             />
           </View>
         ))}
-      </ScrollView> 
+      </ScrollView>
 
-      {/* PASSO 2.3: Botão flutuante do carrinho FORA do ScrollView */}
       <TouchableOpacity
         style={styles.cartButton}
-        onPress={() => navigation.navigate('Cart', { cart })} // A navegação continua a mesma
+        onPress={() => navigation.navigate('Cart', { cart })}
       >
         <Ionicons name="cart" size={30} color="white" />
         {totalItemsInCart > 0 && (
@@ -153,34 +149,30 @@ export default function MenuScreen({ navigation }) {
   );
 }
 
-// PASSO 3: Atualizar os estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'yellow',
-    // O padding foi movido para o conteúdo interno, se necessário
+    height: '100vh', // Garante que o container ocupe 100% da altura da tela na web
   },
-  // Seus outros estilos (categoryTitle, menuItem, etc.) permanecem os mesmos
-  // ...
   cartButton: {
-    // Estilo do botão flutuante
-    position: 'absolute', // Fundamental para flutuar
-    bottom: 30,           // Distância da parte de baixo
-    right: 30,            // Distância da direita
+    position: 'fixed', // MUDAMOS de 'absolute' para 'fixed' para fixar na tela do navegador
+    zIndex: 1000,      // Adicionamos um zIndex para garantir que fique por cima de tudo
+    bottom: 30,
+    right: 30,
     backgroundColor: 'red',
     width: 60,
     height: 60,
-    borderRadius: 30,     // Para deixar o botão circular
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,         // Sombra no Android
-    shadowColor: '#000',  // Sombra no iOS
+    elevation: 8,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
   badgeContainer: {
-    // Estilo do contador (badge)
     position: 'absolute',
     top: -5,
     right: -5,
@@ -198,81 +190,81 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
-    categoryTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    marginTop: 20,
-    paddingHorizontal: 10, // Adicionado para dar espaço nas laterais
-    color: '#333',
-  },
-  menuItem: {
-    backgroundColor: '#ffa500',
-    padding: 15,
-    marginRight: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-    width: 180,
-    position: 'relative',
-    textAlign:'center'
-  },
-  itemImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  halfBadge: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'red',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  halfText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  quantityBadge: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'red',
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  quantityText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: 'red',
-    padding: 8,
-    borderRadius: 5,
+  categoryTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginTop: 20,
+    paddingHorizontal: 10,
+    color: '#333',
+  },
+  menuItem: {
+    backgroundColor: '#ffa500',
+    padding: 15,
+    marginRight: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+    width: 180,
+    position: 'relative',
+    textAlign: 'center'
+  },
+  itemImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  halfBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: 'red',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  halfText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  quantityBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: 'red',
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  quantityText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  addButton: {
+    backgroundColor: 'red',
+    padding: 8,
+    borderRadius: 5,
     marginTop: 10,
-  },
-  selectedButton: {
-    backgroundColor: 'green',
-  },
-  addButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
+  },
+  selectedButton: {
+    backgroundColor: 'green',
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   itemName: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -285,6 +277,6 @@ const styles = StyleSheet.create({
   itemDescription: {
     fontSize: 12,
     textAlign: 'center',
-    minHeight: 30, // Garante um espaço mínimo para a descrição
+    minHeight: 30,
   }
 });
