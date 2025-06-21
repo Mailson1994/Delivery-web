@@ -18,7 +18,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           // 2. MUDE A ROTA INICIAL PARA A TELA DE TESTE
-          initialRouteName="Test" 
+          initialRouteName="Home" 
           screenOptions={{
             headerStyle: { backgroundColor: 'red' },
             headerTintColor: '#fff',
